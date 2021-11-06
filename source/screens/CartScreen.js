@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {baseContainer, FONTS, COLORS, SIZES} from '../constants/theme';
-import NumericInput from 'react-native-numeric-input';
 
 const CartScreen = ({navigation}) => {
   const [cartProducts, setCartProducts] = useState([

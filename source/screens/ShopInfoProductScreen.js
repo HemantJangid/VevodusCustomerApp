@@ -1,4 +1,5 @@
-import React, {useState, useRef} from 'react';
+import axios from 'axios';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,181 +11,67 @@ import {
   ScrollView,
   TouchableHighlight,
 } from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS, FONTS} from '../constants/theme';
+import requestUrls from '../constants/requestUrls';
+import {COLORS, FONTS, SIZES} from '../constants/theme';
 import FilterModal from './FilterModal';
 
-const ShopInfoProductScreen = ({navigation, ...props}) => {
-  navigation.setOptions({title: props.route.params.headerTitle});
+const ShopInfoProductScreen = ({navigation, route, ...props}) => {
+  navigation.setOptions({title: route.params.headerTitle});
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [rerender, setrerender] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [shopId, setShopId] = useState(route.params && route.params.shopId);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filters, setFilters] = useState([]);
 
-  const [shopInfo, setShopInfo] = useState({
-    name: 'Store',
-    image: [
-      'https://images.unsplash.com/photo-1561710309-9a739908b336?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=612&q=80',
-    ],
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-  });
+  const [shopInfo, setShopInfo] = useState({});
 
-  const data = [
-    {
-      id: 1,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 2,
-      name: 'Handbag',
-      images: [
-        'https://5.imimg.com/data5/WB/SS/MY-59654262/ladies-designer-handbag-500x500.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 3,
-      name: 'Handbag',
-      images: [
-        'https://m.media-amazon.com/images/I/7164mGGMT-L._AC_SL1500_.jpg',
-      ],
-      price: 280,
-      selling_price: 280,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 4,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 5,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 280,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 6,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'inactive',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 7,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 280,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 8,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'inactive',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 9,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'inactive',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 10,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-    {
-      id: 11,
-      name: 'Handbag',
-      images: [
-        'https://theleathergarden.com/media/catalog/product/cache/051e751c543d1559e85a534f442fde7f/e/d/editorialhpb-1.jpg',
-      ],
-      price: 280,
-      selling_price: 250,
-      mrp: 500,
-      quantity: 50,
-      status: 'active',
-      tags: ['New', 'Handbag'],
-      category: 'Handbag',
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    getProducts();
+  }, []);
+  useEffect(() => {
+    filterProducts();
+  }, [filters]);
 
-  const [products, setProducts] = useState(data);
+  function getProducts() {
+    setLoading(true);
+
+    axios
+      .get(`${requestUrls.baseUrl}${requestUrls.products}`, {
+        params: {
+          shopId: shopId,
+          verified: 1,
+          isLive: 1,
+        },
+      })
+      .then(response => {
+        console.log(response);
+        setLoading(false);
+        if (response.status === 201) {
+        } else if (response.status === 200) {
+          setProducts(response.data.products);
+          setShopInfo(response.data.shop[0]);
+        }
+      }).catch = err => {
+      console.log(err);
+    };
+  }
+
+  function filterProducts() {
+    let filteredProducts = [];
+    for (let i = 0; i < products.length; i++) {
+      for (let j = 0; j < filters.length; j++) {
+        if (products[i].categoryId === filters[j].value) {
+          filteredProducts.push(products[i]);
+        }
+      }
+    }
+    setFilteredProducts(filteredProducts);
+    setrerender(!rerender);
+  }
 
   const ProductCard = ({item, index}) => {
     return (
@@ -192,11 +79,12 @@ const ShopInfoProductScreen = ({navigation, ...props}) => {
         onPress={() =>
           navigation.navigate('ShopProductDescription', {
             headerTitle: item.name,
+            productInfo: item,
           })
         }
         style={[styles.cardContainer]}>
         <View style={[styles.productCard]}>
-          <Image source={{uri: item.images[0]}} style={styles.productImage} />
+          <Image source={{uri: item.photoLink}} style={styles.productImage} />
           <View style={styles.productInfo}>
             <View
               style={{
@@ -207,7 +95,7 @@ const ShopInfoProductScreen = ({navigation, ...props}) => {
               }}>
               <Text style={[FONTS.h3, {width: '75%'}]}>{item.name}</Text>
             </View>
-            {item.price > item.selling_price ? (
+            {item.mrp > item.sp ? (
               <>
                 <View
                   style={{
@@ -217,17 +105,11 @@ const ShopInfoProductScreen = ({navigation, ...props}) => {
                   }}>
                   <Text
                     style={[FONTS.body4, {textDecorationLine: 'line-through'}]}>
-                    Rs. {item.price}
+                    Rs. {item.mrp}
                   </Text>
-                  <Text style={[FONTS.body4, {marginLeft: 5}]}>
-                    {item.selling_price}
-                  </Text>
+                  <Text style={[FONTS.body4, {marginLeft: 5}]}>{item.sp}</Text>
                   <Text style={[FONTS.body5, {marginLeft: 5}]}>
-                    (
-                    {Math.round(
-                      ((item.price - item.selling_price) / item.price) * 100,
-                    )}
-                    % off)
+                    ({Math.round(((item.mrp - item.sp) / item.mrp) * 100)}% off)
                   </Text>
                 </View>
               </>
@@ -246,61 +128,120 @@ const ShopInfoProductScreen = ({navigation, ...props}) => {
       </TouchableHighlight>
     );
   };
+  console.log('shopInfo: ', shopInfo);
+  console.log('products: ', products);
 
   return (
     <>
-      {showFilterModal && (
-        <FilterModal
-          isVisible={showFilterModal}
-          onClose={() => setShowFilterModal(false)}
-        />
-      )}
-      <ScrollView contentContainerStyle={{padding: 20}}>
-        <View>
-          <Image
-            source={{uri: shopInfo.image[0]}}
-            style={{height: 400, borderRadius: 10}}
-          />
-        </View>
-        <Text style={[FONTS.h2, {marginTop: 15}]}>{shopInfo.name}</Text>
-        <Text
-          style={[
-            FONTS.body4,
-            {
-              textAlign: 'center',
-              marginTop: 10,
-              textAlign: 'justify',
-            },
-          ]}>
-          {shopInfo.description}
-        </Text>
+      {loading ? (
         <View
           style={{
-            flexDirection: 'row',
+            flex: 1,
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
           }}>
-          <Text style={[FONTS.h2, {marginTop: 15}]}>Products</Text>
-          <TouchableOpacity
-            onPress={() => setShowFilterModal(true)}
-            style={{padding: 10}}>
-            <Icon name="sort-variant" color={COLORS.gray} size={30} />
-          </TouchableOpacity>
+          <ActivityIndicator animating={true} color={COLORS.black} size={40} />
         </View>
-        <View style={{marginTop: 10}}>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              paddingBottom: 100,
-            }}>
-            {products.map((product, index) => (
-              <ProductCard item={product} index={index} key={index} />
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+      ) : (
+        <>
+          {showFilterModal && (
+            <FilterModal
+            filterProducts={filterProducts}
+            filters={filters}
+            setFilters={setFilters}
+            isVisible={showFilterModal}
+            onClose={() => setShowFilterModal(false)}
+            />
+          )}
+          <ScrollView
+            contentContainerStyle={{padding: 20}}
+            showsVerticalScrollIndicator={false}>
+            <View>
+              <Image
+                source={{uri: shopInfo.photoLink}}
+                style={{height: 400, borderRadius: 10}}
+              />
+            </View>
+            <Text style={[FONTS.h2, {marginTop: 15}]}>{shopInfo.name}</Text>
+            <Text
+              style={[
+                FONTS.body4,
+                {
+                  textAlign: 'center',
+                  marginTop: 10,
+                  textAlign: 'justify',
+                },
+              ]}>
+              {shopInfo.description && shopInfo.description}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <Text style={[FONTS.h2, {marginTop: 15}]}>Products</Text>
+              <TouchableOpacity
+                onPress={() => setShowFilterModal(true)}
+                style={{padding: 10}}>
+                <Icon name="filter" color={COLORS.gray} size={30} />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginTop: 10}}>
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  paddingBottom: 100,
+                }}>
+                {products.length !== 0 &&
+                (filters.length > 0
+                  ? filteredProducts.map((product, index) => (
+                      <ProductCard item={product} index={index} key={index} />
+                    ))
+                  : products.map((product, index) => (
+                      <ProductCard item={product} index={index} key={index} />
+                    )))}
+
+              {filters.length > 0 && filteredProducts.length === 0 && (
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                  }}>
+                  <Text
+                    style={[
+                      FONTS.body3,
+                      {textAlign: 'center', marginTop: SIZES.padding},
+                    ]}>
+                    No Products to show here.
+                  </Text>
+                </View>
+              )}
+
+              {filters.length === 0 && products.length === 0 && (
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                  }}>
+                  <Text
+                    style={[
+                      FONTS.body3,
+                      {textAlign: 'center', marginTop: SIZES.padding},
+                    ]}>
+                    No Products to show here.
+                  </Text>
+                </View>
+              )}
+              </View>
+            </View>
+          </ScrollView>
+        </>
+      )}
     </>
   );
 };

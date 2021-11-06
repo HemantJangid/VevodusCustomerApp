@@ -1,5 +1,5 @@
 const constants = {
-  focusedTabBarIcon: '#185ADB',
+  focusedTabBarIcon: 'white',
   unfocusedTabBarIcon: 'grey',
   analyticsCardContentColor: 'white',
 };

@@ -8,6 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   TouchableHighlight,
+  StyleSheet,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,35 +16,77 @@ import SelectMultiple from 'react-native-select-multiple';
 
 import {RadioButton} from 'react-native-paper';
 
-import {COLORS, FONTS, SIZES} from '../constants/theme';
+import appTheme, {COLORS, FONTS, SIZES} from '../constants/theme';
+import axios from 'axios';
+import requestUrls from '../constants/requestUrls';
 // import {Checkbox} from 'react-native-paper';
 
-const categories = [
-  {label: 'Shoes', value: 'shoes'},
-  {label: 'Shirts', value: 'shirts'},
-  {label: 'T-Shirts', value: 't-shirts'},
-  {label: 'Jeans', value: 'jeans'},
-  {label: 'Mobiles', value: 'mobiles'},
-  {label: 'Television', value: 'television'},
-];
+// const categories = [
+//   {label: 'Shoes', value: 'shoes'},
+//   {label: 'Shirts', value: 'shirts'},
+//   {label: 'T-Shirts', value: 't-shirts'},
+//   {label: 'Jeans', value: 'jeans'},
+//   {label: 'Mobiles', value: 'mobiles'},
+//   {label: 'Television', value: 'television'},
+// ];
 
-const FilterModal = ({isVisible, onClose}) => {
+const FilterModal = ({isVisible, onClose, filters, setFilters, filterProducts}) => {
   const [showFilterModal, setShowFilterModal] = useState(isVisible);
   const modalAnimatedValue = React.useRef(new Animated.Value(0)).current;
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(filters);
+  const [categories, setCategories] = useState([]);
+  const [rerender, setRerender] = useState(true);
   const [selectedActiveInactive, setSelectedActiveInactive] = useState('Both');
+
+  useEffect(() => {
+    getAllCategories();
+  }, []);
+
+  function getAllCategories() {
+    axios
+      .get(`${requestUrls.baseUrl}${requestUrls.categories}`)
+      .then(response => {
+        if (response.status === 200) {
+          let temp = response.data;
+          let categories = temp.categories;
+          let uniqueCategories = [];
+          for (let i = 0; i < categories.length; i++) {
+            let addCategory = true;
+            for (let j = 0; j < uniqueCategories.length; j++) {
+              if (categories[i].categoryName === uniqueCategories[j].label) {
+                addCategory = false;
+                break;
+              }
+            }
+            if (addCategory)
+              uniqueCategories.push({
+                label: categories[i].categoryName,
+                value: categories[i].categoryId,
+              });
+          }
+          // uniqueCategories.push({
+          //   value: -1,
+          //   label: 'Other',
+          // });
+          setCategories(uniqueCategories);
+          setRerender(!rerender);
+        }
+      }).catch = err => {
+      console.log(err);
+    };
+  }
 
   useEffect(() => {
     if (showFilterModal) {
       Animated.timing(modalAnimatedValue, {
         toValue: 1,
-        duration: 300,
+        duration: 500,
         useNativeDriver: false,
       }).start();
     } else {
       Animated.timing(modalAnimatedValue, {
         toValue: 0,
-        duration: 300,
+        duration: 500,
         useNativeDriver: false,
       }).start(() => onClose());
     }
@@ -51,7 +94,7 @@ const FilterModal = ({isVisible, onClose}) => {
 
   const modalY = modalAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [SIZES.height, SIZES.height - 550],
+    outputRange: [SIZES.height, 0],
   });
 
   function onSelectionsChange(selectedCategories) {
@@ -59,7 +102,11 @@ const FilterModal = ({isVisible, onClose}) => {
     setSelectedCategories(selectedCategories);
   }
 
-  console.log(selectedCategories, selectedActiveInactive);
+
+  function applyFilters() {
+    setFilters(selectedCategories);
+    setShowFilterModal(false);
+  }
 
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
@@ -109,7 +156,7 @@ const FilterModal = ({isVisible, onClose}) => {
           </View>
 
           {/* Catergory Filter */}
-          <View>
+          <View style={styles.container}>
             <Text style={[FONTS.body2, {marginBottom: SIZES.base}]}>
               Categories
             </Text>
@@ -124,7 +171,7 @@ const FilterModal = ({isVisible, onClose}) => {
             />
           </View>
 
-          {/* Active Inactive */}
+          {/* Active Inactive
           <View style={{marginTop: 10}}>
             <Text style={[FONTS.body2, {marginBottom: SIZES.base}]}>
               Active/Inactive
@@ -145,7 +192,15 @@ const FilterModal = ({isVisible, onClose}) => {
                 <Text style={FONTS.body3}>Inactive</Text>
               </View>
             </RadioButton.Group>
-          </View>
+          </View> */}
+
+          <TouchableOpacity
+            style={styles.commandButton}
+            onPress={applyFilters}>
+            <Text style={[{color: appTheme.COLORS.white}, appTheme.FONTS.h2]}>
+              Apply Filters
+            </Text>
+          </TouchableOpacity>
         </Animated.View>
       </View>
     </Modal>
@@ -153,3 +208,16 @@ const FilterModal = ({isVisible, onClose}) => {
 };
 
 export default FilterModal;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  commandButton: {
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: appTheme.COLORS.black,
+    alignItems: 'center',
+    marginTop: 20,
+  }
+});

@@ -1,4 +1,5 @@
-import React, {useState, useRef} from 'react';
+import axios from 'axios';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,33 +12,56 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
+import requestUrls from '../constants/requestUrls';
 import ProductNavigator from '../navigation/productNavigator';
 import {FONTS, SIZES, COLORS} from './../constants/theme';
 
 const ShopScreen = ({navigation}) => {
-  const data = [
-    {
-      id: 1,
-      name: 'Store',
-      images: [
-        'https://images.unsplash.com/photo-1561710309-9a739908b336?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=612&q=80',
-      ],
-    },
-  ];
+  const [shops, setShops] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [shops, setShops] = useState(data);
+  useEffect(() => {
+    navigation.addListener('focus', payload => {
+      getShops();
+    });
+  }, []);
+
+  useEffect(() => {
+    getShops();
+  }, []);
+
+  function getShops() {
+    setLoading(true);
+    axios.get(`${requestUrls.baseUrl}${requestUrls.shops}`, {
+      params: {
+        verified: 1
+      }
+    }).then(response => {
+      setLoading(false);
+      if (response.status === 201) {
+      } else if (response.status === 200) {
+        setShops(response.data);
+      }
+    }).catch = err => {
+      console.log(err);
+    };
+  }
 
   const ShopCard = ({item, index}) => {
     return (
       <TouchableHighlight
-        onPress={() =>
-          navigation.navigate('ShopInfoProduct', {
-            headerTitle: item.name,
-          })
-        }
+        onPress={() => {
+          // console.log('shopId shopScreen: ', item.shopId);
+          // navigation.navigate('Products', {
+          //   screen: 'Products',
+          //   params: {shopId: item.shopId},
+          // });
+          navigation.navigate('ShopInfoProduct', {shopId: item.shopId, headerTitle: item.name});
+        }}
         style={[styles.cardContainer]}>
         <View style={[styles.shopCard]}>
-          <Image source={{uri: item.images[0]}} style={styles.shopImage} />
+          <Image source={{uri: item.photoLink}} style={styles.shopImage} />
           <View style={styles.shopInfo}>
             <View
               style={{
@@ -56,18 +80,31 @@ const ShopScreen = ({navigation}) => {
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={{
-          padding: 10,
-          width: '100%',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          paddingBottom: 100,
-        }}>
-        {shops.map((shop, index) => (
-          <ShopCard item={shop} index={index} key={index} />
-        ))}
-      </ScrollView>
+      {loading ? (
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <ActivityIndicator animating={true} color={COLORS.black} size={40} />
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={{
+            padding: 10,
+            width: '100%',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            paddingBottom: 100,
+          }}
+          showsVerticalScrollIndicator={false}
+          >
+          {shops.map((shop, index) => (
+            <ShopCard item={shop} index={index} key={index} />
+          ))}
+        </ScrollView>
+      )}
     </>
   );
 };
