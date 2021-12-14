@@ -123,6 +123,24 @@ const OrderInfo = ({navigation, route, ...props}) => {
                     {color: appTheme.COLORS.black},
                     appTheme.FONTS.body3,
                   ]}>
+                  Order Number:
+                </Text>
+                <Text
+                  style={[
+                    {color: appTheme.COLORS.gray, marginLeft: 20, width: '75%'},
+                    appTheme.FONTS.body3,
+                  ]}>
+                  {orderInfo && orderInfo.checkoutDetails.orderId}
+                </Text>
+              </View>
+            )}
+            {orderInfo && (
+              <View style={styles.row}>
+                <Text
+                  style={[
+                    {color: appTheme.COLORS.black},
+                    appTheme.FONTS.body3,
+                  ]}>
                   MRP:
                 </Text>
                 <Text

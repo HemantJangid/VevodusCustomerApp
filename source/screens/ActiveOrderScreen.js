@@ -84,6 +84,14 @@ const ActiveOrderScreen = ({navigation, ...props}) => {
                             appTheme.FONTS.body4,
                             {color: appTheme.COLORS.gray},
                           ]}>
+                          Order Number:
+                          {item.orderId}
+                        </Text>
+                        <Text
+                          style={[
+                            appTheme.FONTS.body4,
+                            {color: appTheme.COLORS.gray},
+                          ]}>
                           Quantity: {item.quantity}
                         </Text>
                         <Text

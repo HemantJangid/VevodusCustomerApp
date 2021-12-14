@@ -6,29 +6,31 @@ import ProductInfoScreen from './../screens/ProductInfoScreen';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../redux/actions/user';
 import { COLORS } from '../constants/theme';
+import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
 
+
 const ProductNavigator = ({navigation}) => {
 
-
+  const {userDetails} = useSelector(state => state.userReducer);  
   const dispatch = useDispatch();
 
   return (
     <Stack.Navigator initialRouteName="Products" headerMode="screen">
       <Stack.Screen
-        name="Products"
+        name={`Hola ${userDetails.name}!`}
         component={ProductScreen}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black
+            backgroundColor: COLORS.white
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white
+            color: COLORS.black
           },
-          headerLeft: () => null
+          headerTitleAlign: 'left'
         }}
       />
       <Stack.Screen

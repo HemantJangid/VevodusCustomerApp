@@ -28,7 +28,7 @@ const Tabs = () => {
         keyboardHidesTabBar: true,
         style: {
           position: 'absolute',
-          borderRadius: 10,
+          borderRadius: 0,
           backgroundColor: COLORS.black,
           height: 70,
         },

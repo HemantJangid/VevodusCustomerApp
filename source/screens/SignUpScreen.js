@@ -22,8 +22,9 @@ import {TextField} from 'rn-material-ui-textfield';
 import {ActivityIndicator} from 'react-native-paper';
 
 const SignUpScreen = ({navigation, ...props}) => {
+  const defaultImage = 'https://cdn.dribbble.com/users/1577045/screenshots/4914645/dribble_pic.png?compress=1&resize=400x300';
   const [profileImage, setProfileImage] = useState(
-    'https://cdn.dribbble.com/users/1577045/screenshots/4914645/dribble_pic.png?compress=1&resize=400x300',
+    defaultImage
   );
   const [rerender, setRerender] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -74,17 +75,17 @@ const SignUpScreen = ({navigation, ...props}) => {
       address: address.address,
       lat: address.latitude,
       lang: address.longitude,
-      photoLength: 1,
+      photoLength: profileImage.path?1:0,
     };
     console.log(signupData);
 
     var data = new FormData();
     Object.keys(signupData).forEach(key => data.append(key, signupData[key]));
-    data.append('photos', {
-      uri: profileImage.path,
-      name: profileImage.path.substr(profileImage.path.lastIndexOf('/') + 1),
-      type: profileImage.mime,
-    });
+    // data.append('photos', {
+    //   uri: profileImage.path,
+    //   name: profileImage.path && profileImage.path.substr(profileImage.path.lastIndexOf('/') + 1),
+    //   type: profileImage.mime,
+    // });
 
     axios({
       method: 'post',

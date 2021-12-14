@@ -19,6 +19,8 @@ import requestUrls from '../constants/requestUrls';
 import axios from 'axios';
 import {useIsFocused} from '@react-navigation/native';
 import {ActivityIndicator} from 'react-native-paper';
+import {Dropdown} from 'react-native-material-dropdown';
+
 
 const ProductScreen = ({navigation, route, ...props}) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -29,6 +31,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
   );
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filters, setFilters] = useState([]);
+  const[userDetails,setuserDetails] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const isFocused = useIsFocused();
 
@@ -79,7 +82,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
       console.log(err);
     };
   }
-
+  
   function filterProducts() {
     let filteredProducts = [];
     for (let i = 0; i < products.length; i++) {
@@ -99,7 +102,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
         onPress={() =>
           navigation.navigate('ProductDetails', {
             headerTitle: item.name,
-            productInfo: item,
+            productInfo: item
           })
         }
         style={[styles.cardContainer]}>
@@ -160,6 +163,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
           }}>
           <ActivityIndicator animating={true} color={COLORS.black} size={40} />
         </View>
+        
       ) : (
         <>
           {showFilterModal && (
@@ -178,6 +182,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
               width: '100%',
             }}
             showsVerticalScrollIndicator={false}>
+            
             <View
               style={{
                 flexDirection: 'row',
@@ -185,6 +190,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
                 justifyContent: shopId === -1 ? 'flex-end' : 'space-between',
                 paddingHorizontal: 10
               }}>
+              
               <View
                 style={{
                   flexDirection: 'row',
@@ -196,6 +202,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
                   height: 50,
                   borderRadius: 30,
                 }}>
+                  
                 <TextInput
                   key="searchText"
                   style={[
@@ -313,7 +320,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     alignItems: 'center',
     borderRadius: 10,
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   productImage: {
     height: 150,

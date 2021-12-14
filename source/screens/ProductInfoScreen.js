@@ -86,6 +86,7 @@ const ProductInfoScreen = ({navigation, route, ...props}) => {
   function changeQuantity(changeType) {
     let temp = quantity;
     temp += changeType === 'increase' ? 1 : -1;
+    if (temp == 0) return;
     setQuantity(temp);
     setRerender(!rerender);
   }
