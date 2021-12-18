@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
-import {useFormik} from 'formik';
-import {OutlinedTextField, TextField} from 'rn-material-ui-textfield';
-import {COLORS, FONTS} from '../constants/theme';
-import * as yup from 'yup';
-import {useSelector} from 'react-redux';
 import axios from 'axios';
+import {useFormik} from 'formik';
+import React, {useState} from 'react';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
+import {useSelector} from 'react-redux';
+import {TextField} from 'rn-material-ui-textfield';
+import * as yup from 'yup';
 import requestUrls from '../constants/requestUrls';
-import { ActivityIndicator } from 'react-native-paper';
+import {COLORS, FONTS} from '../constants/theme';
 
 const GiftScreen = () => {
   const [loading, setLoading] = useState(false);

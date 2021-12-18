@@ -1,31 +1,18 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {
-  View,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import {
+  ActivityIndicator,
   Avatar,
-  Title,
   Caption,
   Text,
-  TouchableRipple,
-  ActivityIndicator,
+  Title,
 } from 'react-native-paper';
-
-import globalStyles from '../constants/styles';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Header from '../components/Header';
-import appTheme, {COLORS, FONTS, SIZES} from './../constants/theme';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import requestUrls from '../constants/requestUrls';
-import axios from 'axios';
+import appTheme, {COLORS, FONTS} from './../constants/theme';
 
 const OrderInfo = ({navigation, route, ...props}) => {
-  console.log(route.params);
   navigation.setOptions({title: route.params.orderInfo.name});
   const [orderInfo, setOrderInfo] = useState();
   const [loading, setLoading] = useState(false);
@@ -44,7 +31,6 @@ const OrderInfo = ({navigation, route, ...props}) => {
         params,
       })
       .then(response => {
-        console.log(response);
         setLoading(false);
         if (response.status === 201) {
         } else if (response.status === 200) {
@@ -130,7 +116,7 @@ const OrderInfo = ({navigation, route, ...props}) => {
                     {color: appTheme.COLORS.gray, marginLeft: 20, width: '75%'},
                     appTheme.FONTS.body3,
                   ]}>
-                  {orderInfo && orderInfo.checkoutDetails.orderId}
+                  {orderInfo && orderInfo.checkoutDetails.checkoutId}
                 </Text>
               </View>
             )}

@@ -1,6 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CartScreen from './../screens/CartScreen';
 
 const Stack = createStackNavigator();

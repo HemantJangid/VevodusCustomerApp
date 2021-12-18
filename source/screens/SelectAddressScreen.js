@@ -1,6 +1,6 @@
 import React from 'react';
-import LocationView from 'react-native-location-view';
 import {View} from 'react-native';
+import LocationView from 'react-native-location-view';
 import appTheme from '../constants/theme';
 
 const SelectAddressScreen = ({navigation, route, ...props}) => {

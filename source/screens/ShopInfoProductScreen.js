@@ -1,15 +1,13 @@
 import axios from 'axios';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  TouchableOpacity,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
   TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -48,7 +46,6 @@ const ShopInfoProductScreen = ({navigation, route, ...props}) => {
         },
       })
       .then(response => {
-        console.log(response);
         setLoading(false);
         if (response.status === 201) {
         } else if (response.status === 200) {
@@ -128,8 +125,6 @@ const ShopInfoProductScreen = ({navigation, route, ...props}) => {
       </TouchableHighlight>
     );
   };
-  console.log('shopInfo: ', shopInfo);
-  console.log('products: ', products);
 
   return (
     <>
@@ -146,11 +141,11 @@ const ShopInfoProductScreen = ({navigation, route, ...props}) => {
         <>
           {showFilterModal && (
             <FilterModal
-            filterProducts={filterProducts}
-            filters={filters}
-            setFilters={setFilters}
-            isVisible={showFilterModal}
-            onClose={() => setShowFilterModal(false)}
+              filterProducts={filterProducts}
+              filters={filters}
+              setFilters={setFilters}
+              isVisible={showFilterModal}
+              onClose={() => setShowFilterModal(false)}
             />
           )}
           <ScrollView
@@ -196,47 +191,47 @@ const ShopInfoProductScreen = ({navigation, route, ...props}) => {
                   paddingBottom: 100,
                 }}>
                 {products.length !== 0 &&
-                (filters.length > 0
-                  ? filteredProducts.map((product, index) => (
-                      <ProductCard item={product} index={index} key={index} />
-                    ))
-                  : products.map((product, index) => (
-                      <ProductCard item={product} index={index} key={index} />
-                    )))}
+                  (filters.length > 0
+                    ? filteredProducts.map((product, index) => (
+                        <ProductCard item={product} index={index} key={index} />
+                      ))
+                    : products.map((product, index) => (
+                        <ProductCard item={product} index={index} key={index} />
+                      )))}
 
-              {filters.length > 0 && filteredProducts.length === 0 && (
-                <View
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                  }}>
-                  <Text
-                    style={[
-                      FONTS.body3,
-                      {textAlign: 'center', marginTop: SIZES.padding},
-                    ]}>
-                    No Products to show here.
-                  </Text>
-                </View>
-              )}
+                {filters.length > 0 && filteredProducts.length === 0 && (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                    }}>
+                    <Text
+                      style={[
+                        FONTS.body3,
+                        {textAlign: 'center', marginTop: SIZES.padding},
+                      ]}>
+                      No Products to show here.
+                    </Text>
+                  </View>
+                )}
 
-              {filters.length === 0 && products.length === 0 && (
-                <View
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                  }}>
-                  <Text
-                    style={[
-                      FONTS.body3,
-                      {textAlign: 'center', marginTop: SIZES.padding},
-                    ]}>
-                    No Products to show here.
-                  </Text>
-                </View>
-              )}
+                {filters.length === 0 && products.length === 0 && (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                    }}>
+                    <Text
+                      style={[
+                        FONTS.body3,
+                        {textAlign: 'center', marginTop: SIZES.padding},
+                      ]}>
+                      No Products to show here.
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
           </ScrollView>

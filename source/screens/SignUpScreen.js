@@ -1,31 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import axios from 'axios';
+import {useFormik} from 'formik';
+import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Image,
   Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import ImageCropPicker from 'react-native-image-crop-picker';
+import {ActivityIndicator} from 'react-native-paper';
+import {TextField} from 'rn-material-ui-textfield';
+import * as yup from 'yup';
+import Header from '../components/Header';
+import requestUrls from '../constants/requestUrls';
 import globalStyles from '../constants/styles';
 import appTheme, {COLORS, FONTS} from '../constants/theme';
-import Geolocation from '@react-native-community/geolocation';
-import {useFormik} from 'formik';
-import Header from '../components/Header';
-import ImageCropPicker from 'react-native-image-crop-picker';
-import requestUrls from '../constants/requestUrls';
-import axios from 'axios';
-import * as yup from 'yup';
-import {TextField} from 'rn-material-ui-textfield';
-import {ActivityIndicator} from 'react-native-paper';
 
 const SignUpScreen = ({navigation, ...props}) => {
-  const defaultImage = 'https://cdn.dribbble.com/users/1577045/screenshots/4914645/dribble_pic.png?compress=1&resize=400x300';
-  const [profileImage, setProfileImage] = useState(
-    defaultImage
-  );
+  const defaultImage =
+    'https://cdn.dribbble.com/users/1577045/screenshots/4914645/dribble_pic.png?compress=1&resize=400x300';
+  const [profileImage, setProfileImage] = useState(defaultImage);
   const [rerender, setRerender] = useState(true);
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState({
@@ -75,7 +72,7 @@ const SignUpScreen = ({navigation, ...props}) => {
       address: address.address,
       lat: address.latitude,
       lang: address.longitude,
-      photoLength: profileImage.path?1:0,
+      photoLength: profileImage.path ? 1 : 0,
     };
     console.log(signupData);
 

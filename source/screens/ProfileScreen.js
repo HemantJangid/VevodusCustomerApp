@@ -1,20 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import {View, SafeAreaView, StyleSheet, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   Avatar,
-  Title,
   Caption,
   Text,
+  Title,
   TouchableRipple,
 } from 'react-native-paper';
-
-import globalStyles from '../constants/styles';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Header from '../components/Header';
-import appTheme, {COLORS} from './../constants/theme';
-import {useDispatch, useSelector} from 'react-redux';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-import {NavigationContainer} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import appTheme, {COLORS} from './../constants/theme';
 
 const ProfileScreen = ({navigation, route, ...props}) => {
   const [rerender, setRerender] = useState(false);

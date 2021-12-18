@@ -1,49 +1,66 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/core';
 import axios from 'axios';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  FlatList,
-  TouchableHighlight,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
 import requestUrls from '../constants/requestUrls';
-import ProductNavigator from '../navigation/productNavigator';
-import {FONTS, SIZES, COLORS} from './../constants/theme';
+import {COLORS, FONTS, SIZES} from './../constants/theme';
 
 const ShopScreen = ({navigation}) => {
   const [shops, setShops] = useState([]);
+  const [rerender, setRerender] = useState(true);
+  const {userDetails} = useSelector(state => state.userReducer);
+  const [shopsToDisplay, setShopsToDisplay] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [city, setCity] = useState(userDetails.city);
 
-  useEffect(() => {
-    navigation.addListener('focus', payload => {
+  useFocusEffect(
+    React.useCallback(() => {
       getShops();
-    });
-  }, []);
+      getCity();
+    }, [rerender, userDetails.city, city]),
+  );
 
-  useEffect(() => {
-    getShops();
-  }, []);
+  const getCity = async () => {
+    try {
+      const value = await AsyncStorage.getItem('city');
+      setCity(value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   function getShops() {
+    console.log(`getting shops again with city as ${city}`);
     setLoading(true);
-    axios.get(`${requestUrls.baseUrl}${requestUrls.shops}`, {
-      params: {
-        verified: 1
-      }
-    }).then(response => {
-      setLoading(false);
-      if (response.status === 201) {
-      } else if (response.status === 200) {
-        setShops(response.data);
-      }
-    }).catch = err => {
+    axios
+      .get(`${requestUrls.baseUrl}${requestUrls.shops}`, {
+        params: {
+          verified: 1,
+          cityName: city,
+        },
+      })
+      .then(response => {
+        setLoading(false);
+        if (response.status === 201) {
+        } else if (response.status === 200) {
+          setShops(response.data);
+          setShopsToDisplay(response.data);
+        }
+      }).catch = err => {
       console.log(err);
     };
   }
@@ -57,7 +74,10 @@ const ShopScreen = ({navigation}) => {
           //   screen: 'Products',
           //   params: {shopId: item.shopId},
           // });
-          navigation.navigate('ShopInfoProduct', {shopId: item.shopId, headerTitle: item.name});
+          navigation.navigate('ShopInfoProduct', {
+            shopId: item.shopId,
+            headerTitle: item.name,
+          });
         }}
         style={[styles.cardContainer]}>
         <View style={[styles.shopCard]}>
@@ -89,21 +109,82 @@ const ShopScreen = ({navigation}) => {
           }}>
           <ActivityIndicator animating={true} color={COLORS.black} size={40} />
         </View>
+      ) : shopsToDisplay.length > 0 ? (
+        <View>
+          <View
+            style={{
+              alignSelf: 'center',
+              flexDirection: 'row',
+              width: '95%',
+              backgroundColor: COLORS.lightGray,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              // marginLeft: 8,
+              height: 50,
+              borderRadius: 30,
+              marginTop: 10,
+            }}>
+            <TextInput
+              key="searchText"
+              style={[
+                FONTS.body3,
+                {
+                  height: 50,
+                  width: '88%',
+                  backgroundColor: 'transparent',
+                  borderBottomWidth: 0,
+                  paddingLeft: 20,
+                },
+              ]}
+              placeholder="Search"
+              placeholderTextColor={COLORS.gray}
+              value={searchQuery}
+              onChangeText={text => setSearchQuery(text)}
+              onSubmitEditing={() => {
+                console.log('search: ', searchQuery);
+                getSearchProducts();
+              }}
+            />
+            {searchQuery.length !== 0 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setSearchQuery('');
+                  setProductsToDisplay(products);
+                }}
+                style={{marginRight: 10}}>
+                <Icon name="hospital" color={appTheme.COLORS.gray} size={25} />
+              </TouchableOpacity>
+            )}
+          </View>
+          <ScrollView
+            contentContainerStyle={{
+              padding: 10,
+              width: '100%',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              paddingBottom: 100,
+            }}
+            showsVerticalScrollIndicator={false}>
+            {shopsToDisplay.map((shop, index) => (
+              <ShopCard item={shop} index={index} key={index} />
+            ))}
+          </ScrollView>
+        </View>
       ) : (
-        <ScrollView
-          contentContainerStyle={{
-            padding: 10,
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
             width: '100%',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            paddingBottom: 100,
-          }}
-          showsVerticalScrollIndicator={false}
-          >
-          {shops.map((shop, index) => (
-            <ShopCard item={shop} index={index} key={index} />
-          ))}
-        </ScrollView>
+          }}>
+          <Text
+            style={[
+              FONTS.body3,
+              {textAlign: 'center', marginTop: SIZES.padding},
+            ]}>
+            No Shops to show here.
+          </Text>
+        </View>
       )}
     </>
   );

@@ -1,20 +1,18 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  ScrollView,
   FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
   TouchableHighlight,
+  View,
 } from 'react-native';
-import globalStyles from '../constants/styles';
-import {ActivityIndicator, Avatar} from 'react-native-paper';
-import Header from '../components/Header';
-import appTheme, {COLORS} from '../constants/theme';
-import axios from 'axios';
-import requestUrls from '../constants/requestUrls';
+import {Avatar} from 'react-native-paper';
 import {useSelector} from 'react-redux';
+import requestUrls from '../constants/requestUrls';
+import globalStyles from '../constants/styles';
+import appTheme from '../constants/theme';
 
 const ActiveOrderScreen = ({navigation, ...props}) => {
   const [orders, setOrders] = useState([]);
@@ -71,21 +69,15 @@ const ActiveOrderScreen = ({navigation, ...props}) => {
                     key={index}
                     style={styles.cardContainer}>
                     <View style={[styles.orderCard]}>
-                      <Avatar.Image
-                        size={72}
-                        source={{uri: item.photoLink}}
-                      />
+                      <Avatar.Image size={72} source={{uri: item.photoLink}} />
                       <View style={styles.orderInfo}>
-                        <Text style={appTheme.FONTS.h3}>
-                          {item.name}
-                        </Text>
+                        <Text style={appTheme.FONTS.h3}>{item.name}</Text>
                         <Text
                           style={[
                             appTheme.FONTS.body4,
                             {color: appTheme.COLORS.gray},
                           ]}>
-                          Order Number:
-                          {item.orderId}
+                          Order Number: {item.checkoutId}
                         </Text>
                         <Text
                           style={[
@@ -99,8 +91,7 @@ const ActiveOrderScreen = ({navigation, ...props}) => {
                             appTheme.FONTS.body4,
                             {color: appTheme.COLORS.gray},
                           ]}>
-                          Order Value: ₹
-                          {item.quantity * item.sp}
+                          Order Value: ₹{item.quantity * item.sp}
                         </Text>
                       </View>
                     </View>

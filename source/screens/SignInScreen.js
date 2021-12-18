@@ -1,22 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import axios from 'axios';
+import React, {useState} from 'react';
+import {Alert, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
+import {useDispatch, useSelector} from 'react-redux';
+import requestUrls from '../constants/requestUrls';
 import globalStyles from './../constants/styles';
 import {COLORS, FONTS, SIZES} from './../constants/theme';
-import requestUrls from '../constants/requestUrls';
-import {axiosAll} from '../utility/axiosAll';
-import {useDispatch, useSelector} from 'react-redux';
-import {addUser} from '../redux/actions/user';
-import {ActivityIndicator} from 'react-native-paper';
-import axios from 'axios';
 
 const SignInScreen = ({navigation}) => {
   const [number, setNumber] = useState('');

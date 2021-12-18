@@ -1,24 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  Animated,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Modal,
-  TouchableOpacity,
-  TouchableHighlight,
-  StyleSheet,
-} from 'react-native';
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import SelectMultiple from 'react-native-select-multiple';
-
-import {RadioButton} from 'react-native-paper';
-
-import appTheme, {COLORS, FONTS, SIZES} from '../constants/theme';
 import axios from 'axios';
+import React, {useEffect, useState} from 'react';
+import {
+  Animated,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import SelectMultiple from 'react-native-select-multiple';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import requestUrls from '../constants/requestUrls';
+import appTheme, {COLORS, FONTS, SIZES} from '../constants/theme';
+
 // import {Checkbox} from 'react-native-paper';
 
 // const categories = [
@@ -30,7 +25,13 @@ import requestUrls from '../constants/requestUrls';
 //   {label: 'Television', value: 'television'},
 // ];
 
-const FilterModal = ({isVisible, onClose, filters, setFilters, filterProducts}) => {
+const FilterModal = ({
+  isVisible,
+  onClose,
+  filters,
+  setFilters,
+  filterProducts,
+}) => {
   const [showFilterModal, setShowFilterModal] = useState(isVisible);
   const modalAnimatedValue = React.useRef(new Animated.Value(0)).current;
   const [selectedCategories, setSelectedCategories] = useState(filters);
@@ -101,7 +102,6 @@ const FilterModal = ({isVisible, onClose, filters, setFilters, filterProducts}) 
     // selectedCategories is array of { label, value }
     setSelectedCategories(selectedCategories);
   }
-
 
   function applyFilters() {
     setFilters(selectedCategories);
@@ -194,9 +194,7 @@ const FilterModal = ({isVisible, onClose, filters, setFilters, filterProducts}) 
             </RadioButton.Group>
           </View> */}
 
-          <TouchableOpacity
-            style={styles.commandButton}
-            onPress={applyFilters}>
+          <TouchableOpacity style={styles.commandButton} onPress={applyFilters}>
             <Text style={[{color: appTheme.COLORS.white}, appTheme.FONTS.h2]}>
               Apply Filters
             </Text>
@@ -219,5 +217,5 @@ const styles = StyleSheet.create({
     backgroundColor: appTheme.COLORS.black,
     alignItems: 'center',
     marginTop: 20,
-  }
+  },
 });

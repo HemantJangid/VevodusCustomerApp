@@ -1,19 +1,17 @@
 import axios from 'axios';
-import React, {useState, useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  TouchableOpacity,
   Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { useDispatch } from 'react-redux';
+import {ActivityIndicator} from 'react-native-paper';
+import {useDispatch} from 'react-redux';
 import requestUrls from '../constants/requestUrls';
-import { addUser } from '../redux/actions/user';
+import {addUser} from '../redux/actions/user';
 import globalStyles from './../constants/styles';
 import {COLORS, FONTS, SIZES} from './../constants/theme';
 
@@ -49,7 +47,7 @@ const OtpScreen = ({navigation, route, ...props}) => {
       let loginData = {
         mobile: route.params.mobile,
         otp: `${pins.pin1}${pins.pin2}${pins.pin3}${pins.pin4}`,
-        app: 'BUYER'
+        app: 'BUYER',
       };
       axios
         .post(`${requestUrls.baseUrl}${requestUrls.verityOTP}`, loginData)
@@ -178,7 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.radius,
     padding: SIZES.padding,
     textAlign: 'center',
-    width: 80
+    width: 80,
   },
 });
 

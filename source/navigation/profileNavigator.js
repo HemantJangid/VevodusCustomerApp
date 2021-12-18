@@ -1,15 +1,14 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProfileScreen from '../screens/ProfileScreen';
-import {useDispatch} from 'react-redux';
-import {addUser} from '../redux/actions/user';
-import { COLORS, FONTS } from '../constants/theme';
-import { Text, TouchableOpacity } from 'react-native';
+import {Text, TouchableOpacity} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-import PastOrderScreen from '../screens/PastOrderScreen';
+import {useDispatch} from 'react-redux';
+import {COLORS, FONTS} from '../constants/theme';
+import {addUser} from '../redux/actions/user';
 import ActiveOrderScreen from '../screens/ActiveOrderScreen';
 import OrderInfo from '../screens/OrderInfo';
+import PastOrderScreen from '../screens/PastOrderScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,13 +20,13 @@ const ProfileNavigator = ({navigation}) => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black
+            backgroundColor: COLORS.white,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white
+            color: COLORS.black,
           },
           headerRight: () => {
             return (
@@ -40,11 +39,11 @@ const ProfileNavigator = ({navigation}) => {
                   dispatch(addUser({}));
                   navigation.navigate('LandingScreen');
                 }}>
-                <Text style={[FONTS.body3, {color: COLORS.white}]}>Logout</Text>
+                <Text style={[FONTS.body3, {color: COLORS.black}]}>Logout</Text>
                 <FontAwesomeIcon
                   style={{marginHorizontal: 10}}
                   name="sign-out-alt"
-                  color="white"
+                  color="black"
                   size={20}
                 />
               </TouchableOpacity>
@@ -58,14 +57,14 @@ const ProfileNavigator = ({navigation}) => {
         options={{
           headerTintColor: COLORS.white,
           headerStyle: {
-            backgroundColor: COLORS.black
+            backgroundColor: COLORS.black,
           },
           headerTitleContainerStyle: {
-            left: 50
+            left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white
+            color: COLORS.white,
           },
         }}
       />
@@ -75,31 +74,31 @@ const ProfileNavigator = ({navigation}) => {
         options={{
           headerTintColor: COLORS.white,
           headerStyle: {
-            backgroundColor: COLORS.black
+            backgroundColor: COLORS.black,
           },
           headerTitleContainerStyle: {
-            left: 50
+            left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white
+            color: COLORS.white,
           },
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="OrderInfo"
         component={OrderInfo}
         options={{
           headerTintColor: COLORS.white,
           headerStyle: {
-            backgroundColor: COLORS.black
+            backgroundColor: COLORS.black,
           },
           headerTitleContainerStyle: {
-            left: 50
+            left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white
+            color: COLORS.white,
           },
         }}
       />

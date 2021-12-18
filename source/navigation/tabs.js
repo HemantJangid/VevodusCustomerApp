@@ -1,21 +1,14 @@
-import {
-  BottomTabBar,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import ProductScreen from '../screens/ProductScreen';
-import constants from './../constants/constants';
-import ShopScreen from './../screens/ShopScreen';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {StyleSheet, Text, View} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-import CartScreen from './../screens/CartScreen';
-import ProductNavigator from './productNavigator';
-import ShopNavigator from './shopNavigator';
-import CartNavigator from './cartNavigator';
-import { COLORS } from '../constants/theme';
-import ProfileNavigator from './profileNavigator';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {COLORS} from '../constants/theme';
+import constants from './../constants/constants';
 import GiftNavigator from './GiftNavigator';
+import ProductNavigator from './productNavigator';
+import ProfileNavigator from './profileNavigator';
+import ShopNavigator from './shopNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +26,7 @@ const Tabs = () => {
           height: 70,
         },
       }}>
+      {/* <Tab.Screen name="Home" component={Screen} /> */}
       <Tab.Screen
         name="Products"
         component={ProductNavigator}
@@ -40,12 +34,14 @@ const Tabs = () => {
           tabBarIcon: ({focused}) => (
             <View style={styles.tabBarIconView}>
               <FontAwesomeIcon
-              name="boxes"
-              color={focused
-                ? constants.focusedTabBarIcon
-                : constants.unfocusedTabBarIcon}
-              size={25}
-            />
+                name="boxes"
+                color={
+                  focused
+                    ? constants.focusedTabBarIcon
+                    : constants.unfocusedTabBarIcon
+                }
+                size={25}
+              />
               <Text
                 style={[
                   styles.tabBarIconText,
@@ -68,12 +64,14 @@ const Tabs = () => {
           tabBarIcon: ({focused}) => (
             <View style={styles.tabBarIconView}>
               <Icon
-              name="storefront"
-              color={focused
-                ? constants.focusedTabBarIcon
-                : constants.unfocusedTabBarIcon}
-              size={25}
-            />
+                name="storefront"
+                color={
+                  focused
+                    ? constants.focusedTabBarIcon
+                    : constants.unfocusedTabBarIcon
+                }
+                size={25}
+              />
               <Text
                 style={[
                   styles.tabBarIconText,
@@ -131,27 +129,15 @@ const Tabs = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <View style={styles.tabBarIconView}>
-              {/* <Image
-                source={{
-                  uri: 'https://img-premium.flaticon.com/png/512/2349/premium/2349798.png?token=exp=1632670358~hmac=2fccf2580ad15833eff65d0a2c67f467',
-                }}
-                resizeMode="contain"
-                style={[
-                  styles.tabBarIconImage,
-                  {
-                    tintColor: focused
-                      ? constants.focusedTabBarIcon
-                      : constants.unfocusedTabBarIcon,
-                  },
-                ]}
-              /> */}
               <Icon
-              name="gift"
-              color={focused
-                ? constants.focusedTabBarIcon
-                : constants.unfocusedTabBarIcon}
-              size={25}
-            />
+                name="gift"
+                color={
+                  focused
+                    ? constants.focusedTabBarIcon
+                    : constants.unfocusedTabBarIcon
+                }
+                size={25}
+              />
               <Text
                 style={[
                   styles.tabBarIconText,
@@ -174,12 +160,14 @@ const Tabs = () => {
           tabBarIcon: ({focused}) => (
             <View style={styles.tabBarIconView}>
               <Icon
-              name="account"
-              color={focused
-                ? constants.focusedTabBarIcon
-                : constants.unfocusedTabBarIcon}
-              size={25}
-            />
+                name="account"
+                color={
+                  focused
+                    ? constants.focusedTabBarIcon
+                    : constants.unfocusedTabBarIcon
+                }
+                size={25}
+              />
               <Text
                 style={[
                   styles.tabBarIconText,

@@ -1,5 +1,4 @@
 import {ADD_USER, DELETE_USER} from '../actions/types';
-import {Alert} from 'react-native';
 const initialState = {
   userDetails: {},
 };

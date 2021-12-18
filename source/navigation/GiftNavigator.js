@@ -1,9 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch} from 'react-redux';
-import {addUser} from '../redux/actions/user';
-import { COLORS } from '../constants/theme';
+import {COLORS} from '../constants/theme';
 import GiftScreen from '../screens/GiftScreen';
 
 const Stack = createStackNavigator();
@@ -16,14 +14,14 @@ const GiftNavigator = ({navigation}) => {
         name="Gift"
         component={GiftScreen}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black
+            backgroundColor: COLORS.white,
           },
-          headerLeft : () => null,
+          headerLeft: () => null,
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white
+            color: COLORS.black,
           },
         }}
       />

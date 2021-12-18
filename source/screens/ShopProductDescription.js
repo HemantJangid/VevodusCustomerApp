@@ -1,28 +1,22 @@
+import axios from 'axios';
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-  TouchableHighlight,
-  Image,
-  Touchable,
   Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Modal from 'react-native-modalbox';
+import {ActivityIndicator} from 'react-native-paper';
 import Swiper from 'react-native-swiper';
-import {baseContainer} from '../constants/theme';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
+import requestUrls from '../constants/requestUrls';
 import {FONTS} from '../constants/theme';
 import {COLORS} from './../constants/theme';
-import constants from './../constants/constants';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import axios from 'axios';
-import requestUrls from '../constants/requestUrls';
-import {useSelector} from 'react-redux';
-import Modal from 'react-native-modalbox';
-import { ActivityIndicator } from 'react-native-paper';
 
 const shopProductDescription = ({navigation, route, ...props}) => {
   navigation.setOptions({title: route.params.headerTitle});
@@ -61,15 +55,13 @@ const shopProductDescription = ({navigation, route, ...props}) => {
     let body = {
       userId: userDetails.userId,
       productId: productInfo.productId,
-      quantity: quantity
+      quantity: quantity,
     };
     setLoading(true);
-    console.log('body: ', body);
     axios
       .post(`${requestUrls.baseUrl}${requestUrls.placeOrder}`, body)
       .then(response => {
         setLoading(false);
-        console.log(response);
         if (response.status === 200) {
           Alert.alert(
             'Order Placed',

@@ -1,36 +1,121 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Picker} from '@react-native-picker/picker';
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProductScreen from './../screens/ProductScreen';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import requestUrls from '../constants/requestUrls';
+import {COLORS, FONTS} from '../constants/theme';
+import {addUser} from '../redux/actions/user';
 import ProductInfoScreen from './../screens/ProductInfoScreen';
-import { useDispatch } from 'react-redux';
-import { addUser } from '../redux/actions/user';
-import { COLORS } from '../constants/theme';
-import { useSelector } from 'react-redux';
+import ProductScreen from './../screens/ProductScreen';
 
 const Stack = createStackNavigator();
 
-
 const ProductNavigator = ({navigation}) => {
-
-  const {userDetails} = useSelector(state => state.userReducer);  
+  const {userDetails} = useSelector(state => state.userReducer);
+  const {rerender, setRerender} = useState(true);
   const dispatch = useDispatch();
+  const [city, setCity] = useState(userDetails.city);
+  const [cities, setCities] = useState([]);
+  const [showDropDown, setShowDropDown] = useState(false);
+
+  useEffect(() => {
+    getAllCities();
+    getCity();
+  }, [userDetails.city, city]);
+
+  const getCity = async () => {
+    try {
+      const value = await AsyncStorage.getItem('city');
+      setCity(value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  function getAllCities() {
+    axios.get(`${requestUrls.baseUrl}${requestUrls.cities}`).then(response => {
+      if (response.status === 201) {
+      } else if (response.status === 200) {
+        setCities(response.data);
+      }
+    }).catch = err => {
+      console.log(err);
+    };
+  }
+
+  const renderCity = city => {
+    return (
+      <Text
+        style={[
+          FONTS.body3,
+          {
+            paddingVertical: 10,
+            paddingLeft: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: '#696969',
+          },
+        ]}>
+        {city.name}
+      </Text>
+    );
+  };
 
   return (
     <Stack.Navigator initialRouteName="Products" headerMode="screen">
       <Stack.Screen
-        name={`Hola ${userDetails.name}!`}
+        name={`Hi ${userDetails.name && userDetails.name.split(' ')[0]}!`}
         component={ProductScreen}
         options={{
           headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.white
+            backgroundColor: COLORS.white,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.black
+            color: COLORS.black,
+            textTransform: 'capitalize',
           },
-          headerTitleAlign: 'left'
+          headerTitleAlign: 'left',
+          headerLeft: () => null,
+          headerRight: () => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <Picker
+                  selectedValue={city}
+                  onValueChange={async (value, index) => {
+                    setCity(value);
+                    dispatch(addUser({...userDetails, city: value}));
+                    try {
+                      await AsyncStorage.setItem('city', value);
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }}
+                  mode="dropdown" // Android only
+                  style={[styles.picker]}>
+                  {cities.map((city, index) => {
+                    return (
+                      <Picker.Item
+                        fontFamily="Montserrat-Regular"
+                        label={
+                          city.name.charAt(0).toUpperCase() +
+                          city.name.slice(1).toLowerCase()
+                        }
+                        value={city.name}
+                        key={index}
+                      />
+                    );
+                  })}
+                </Picker>
+              </View>
+            );
+          },
         }}
       />
       <Stack.Screen
@@ -39,14 +124,14 @@ const ProductNavigator = ({navigation}) => {
         options={{
           headerTintColor: COLORS.white,
           headerStyle: {
-            backgroundColor: COLORS.black
+            backgroundColor: COLORS.black,
           },
           headerTitleContainerStyle: {
-            left: 50
+            left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white
+            color: COLORS.white,
           },
         }}
       />
@@ -55,3 +140,15 @@ const ProductNavigator = ({navigation}) => {
 };
 
 export default ProductNavigator;
+
+const styles = StyleSheet.create({
+  picker: {
+    marginRight: -60,
+    width: 150,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#666',
+    textDecorationLine: 'underline',
+    backgroundColor: '#e8ebe9',
+  },
+});

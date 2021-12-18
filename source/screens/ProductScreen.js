@@ -1,26 +1,23 @@
-import React, {useState, useRef, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  FlatList,
-  TouchableHighlight,
   Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import ProductNavigator from '../navigation/productNavigator';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import appTheme, {FONTS, SIZES, COLORS} from './../constants/theme';
-import FilterModal from './FilterModal';
-import requestUrls from '../constants/requestUrls';
-import axios from 'axios';
-import {useIsFocused} from '@react-navigation/native';
 import {ActivityIndicator} from 'react-native-paper';
-import {Dropdown} from 'react-native-material-dropdown';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {connect, useSelector} from 'react-redux';
+import requestUrls from '../constants/requestUrls';
+import appTheme, {COLORS, FONTS} from './../constants/theme';
+import FilterModal from './FilterModal';
 
 const ProductScreen = ({navigation, route, ...props}) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -31,36 +28,55 @@ const ProductScreen = ({navigation, route, ...props}) => {
   );
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filters, setFilters] = useState([]);
-  const[userDetails,setuserDetails] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    navigation.addListener('focus', payload => {
-      getProducts();
-    });
-  }, []);
-
-  // useEffect(() => {
-  //   setrerender(!rerender);
-  //   setShopId(route.params && route.params.shopId ? route.params.shopId : -1);
-  // }, [isFocused]);
-
+  const {userDetails} = useSelector(state => state.userReducer);
+  const [productsToDisplay, setProductsToDisplay] = useState([]);
   const [products, setProducts] = useState([]);
+  const [city, setCity] = useState(userDetails.city);
 
-  // useEffect(() => {
-  //   getProducts();
-  // }, [shopId]);
-
-  useEffect(() => {
-    getProducts();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getProducts();
+      getCity();
+    }, [rerender, userDetails.city, city]),
+  );
 
   useEffect(() => {
     filterProducts();
   }, [filters]);
 
+  const getCity = async () => {
+    try {
+      const value = await AsyncStorage.getItem('city');
+      setCity(value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  function getSearchProducts() {
+    setLoading(true);
+
+    axios
+      .get(`${requestUrls.baseUrl}${requestUrls.search}`, {
+        params: {
+          text: searchQuery,
+          cityName: city,
+        },
+      })
+      .then(response => {
+        setLoading(false);
+        if (response.status === 201) {
+        } else if (response.status === 200) {
+          setProductsToDisplay(response.data.products);
+        }
+      }).catch = err => {
+      console.log(err);
+    };
+  }
+
   function getProducts() {
+    console.log(`getting products again with city as ${city}`);
     setLoading(true);
 
     axios
@@ -69,20 +85,21 @@ const ProductScreen = ({navigation, route, ...props}) => {
           shopId: -1,
           verified: 1,
           isLive: 1,
+          cityName: city,
         },
       })
       .then(response => {
-        // console.log(response);
         setLoading(false);
         if (response.status === 201) {
         } else if (response.status === 200) {
           setProducts(response.data.products);
+          setProductsToDisplay(response.data.products);
         }
       }).catch = err => {
       console.log(err);
     };
   }
-  
+
   function filterProducts() {
     let filteredProducts = [];
     for (let i = 0; i < products.length; i++) {
@@ -93,7 +110,8 @@ const ProductScreen = ({navigation, route, ...props}) => {
       }
     }
     setFilteredProducts(filteredProducts);
-    setrerender(!rerender);
+    setProductsToDisplay(filters.length > 0 ? filteredProducts : products);
+    // setrerender(!rerender);
   }
 
   const ProductCard = ({item, index}) => {
@@ -102,7 +120,7 @@ const ProductScreen = ({navigation, route, ...props}) => {
         onPress={() =>
           navigation.navigate('ProductDetails', {
             headerTitle: item.name,
-            productInfo: item
+            productInfo: item,
           })
         }
         style={[styles.cardContainer]}>
@@ -163,7 +181,6 @@ const ProductScreen = ({navigation, route, ...props}) => {
           }}>
           <ActivityIndicator animating={true} color={COLORS.black} size={40} />
         </View>
-        
       ) : (
         <>
           {showFilterModal && (
@@ -182,15 +199,13 @@ const ProductScreen = ({navigation, route, ...props}) => {
               width: '100%',
             }}
             showsVerticalScrollIndicator={false}>
-            
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: shopId === -1 ? 'flex-end' : 'space-between',
-                paddingHorizontal: 10
+                paddingHorizontal: 10,
               }}>
-              
               <View
                 style={{
                   flexDirection: 'row',
@@ -202,7 +217,6 @@ const ProductScreen = ({navigation, route, ...props}) => {
                   height: 50,
                   borderRadius: 30,
                 }}>
-                  
                 <TextInput
                   key="searchText"
                   style={[
@@ -221,18 +235,20 @@ const ProductScreen = ({navigation, route, ...props}) => {
                   onChangeText={text => setSearchQuery(text)}
                   onSubmitEditing={() => {
                     console.log('search: ', searchQuery);
+                    getSearchProducts();
                   }}
                 />
                 {searchQuery.length !== 0 && (
                   <TouchableOpacity
                     onPress={() => {
                       setSearchQuery('');
+                      setProductsToDisplay(products);
                     }}
-                    style={{marginRight: 10}}>
+                    style={{marginRight: 10, rotation: 45}}>
                     <Icon
-                      name="cancel"
+                      name="hospital"
                       color={appTheme.COLORS.gray}
-                      size={20}
+                      size={25}
                     />
                   </TouchableOpacity>
                 )}
@@ -256,35 +272,12 @@ const ProductScreen = ({navigation, route, ...props}) => {
                 // justifyContent: 'center'
                 marginTop: 10,
               }}
-              key='products'
-              >
-              {products.length !== 0 &&
-                (filters.length > 0
-                  ? filteredProducts.map((product, index) => (
-                      <ProductCard item={product} index={index} key={index} />
-                    ))
-                  : products.map((product, index) => (
-                      <ProductCard item={product} index={index} key={index} />
-                    )))}
-
-              {filters.length > 0 && filteredProducts.length === 0 && (
-                <View
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                  }}>
-                  <Text
-                    style={[
-                      appTheme.FONTS.body3,
-                      {textAlign: 'center', marginTop: appTheme.SIZES.padding},
-                    ]}>
-                    No Products to show here.
-                  </Text>
-                </View>
-              )}
-
-              {filters.length === 0 && products.length === 0 && (
+              key="products">
+              {productsToDisplay.length > 0 ? (
+                productsToDisplay.map((product, index) => (
+                  <ProductCard item={product} index={index} key={index} />
+                ))
+              ) : (
                 <View
                   style={{
                     alignItems: 'center',
@@ -320,7 +313,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     alignItems: 'center',
     borderRadius: 10,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   productImage: {
     height: 150,
@@ -334,4 +327,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductScreen;
+const mapStateToProps = state => {
+  return {
+    userDetails: state.userReducer.userDetails,
+  };
+};
+
+export default connect(mapStateToProps)(ProductScreen);

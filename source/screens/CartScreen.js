@@ -1,17 +1,14 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  TouchableHighlight,
-  ScrollView,
   Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {baseContainer, FONTS, COLORS, SIZES} from '../constants/theme';
+import {COLORS, FONTS} from '../constants/theme';
 
 const CartScreen = ({navigation}) => {
   const [cartProducts, setCartProducts] = useState([
