@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import Modal from 'react-native-modalbox';
@@ -29,6 +30,12 @@ const ProductInfoScreen = ({navigation, route, ...props}) => {
   const modal = useRef();
 
   const {userDetails} = useSelector(state => state.userReducer);
+
+  const [address, setAddress] = useState({
+    address: userDetails.address,
+    latitude: 22.7196,
+    longitude: 75.8577,
+  });
 
   useEffect(() => {
     getAllPhotos();
@@ -62,7 +69,6 @@ const ProductInfoScreen = ({navigation, route, ...props}) => {
       .post(`${requestUrls.baseUrl}${requestUrls.placeOrder}`, body)
       .then(response => {
         setLoading(false);
-        console.log(response);
         if (response.status === 200) {
           Alert.alert(
             'Order Placed',
@@ -83,6 +89,15 @@ const ProductInfoScreen = ({navigation, route, ...props}) => {
     setQuantity(temp);
     setRerender(!rerender);
   }
+
+  const handleSelectAddress = () => {
+    setIsModalOpen(false);
+    navigation.navigate('SelectAddressScreen', {
+      setIsModalOpen,
+      setAddress,
+      address,
+    });
+  };
 
   return (
     <>
@@ -280,15 +295,66 @@ const ProductInfoScreen = ({navigation, route, ...props}) => {
               style={{
                 width: '100%',
                 flexDirection: 'row',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 justifyContent: 'space-between',
               }}>
               <Text style={[FONTS.body4, {color: COLORS.gray}]}>Category:</Text>
-              <Text style={[FONTS.body4, {color: COLORS.gray}]}>
+              <Text
+                style={[
+                  FONTS.body4,
+                  {
+                    color: COLORS.gray,
+                    width: '70%',
+                    textAlign: 'right',
+                  },
+                ]}>
                 {productInfo.categoryName}
               </Text>
             </View>
           </View>
+        </View>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            padding: 20,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}>
+            <Text style={[FONTS.h3, {color: COLORS.black}]}>
+              Delivery Address:
+            </Text>
+            <TouchableOpacity
+              onPress={handleSelectAddress}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-end',
+                alignSelf: 'flex-end',
+              }}>
+              <Text style={[FONTS.body4, {textDecorationLine: 'underline'}]}>
+                Pick on map
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text
+            style={[
+              FONTS.body3,
+              {
+                color: COLORS.gray,
+                width: '100%',
+                textAlign: 'left',
+                textTransform: 'capitalize',
+                marginTop: 5,
+              },
+            ]}>
+            {address.address}
+          </Text>
         </View>
         <TouchableHighlight
           onPress={() => {
@@ -379,7 +445,8 @@ const styles = StyleSheet.create({
   modal: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 300,
+    height: 'auto',
+    paddingVertical: 40,
   },
   productCard: {
     flexDirection: 'row',

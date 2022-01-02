@@ -13,8 +13,6 @@ const RootStack = createStackNavigator();
 
 const RootNavigator = ({navigation}) => {
   const {userDetails} = useSelector(state => state.userReducer);
-  console.log(userDetails);
-  console.log(userDetails);
   return (
     <RootStack.Navigator
       headerMode="None"

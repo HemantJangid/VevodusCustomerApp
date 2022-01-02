@@ -3,7 +3,8 @@ import {Picker} from '@react-native-picker/picker';
 import {createStackNavigator} from '@react-navigation/stack';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import requestUrls from '../constants/requestUrls';
 import {COLORS} from '../constants/theme';
@@ -63,38 +64,51 @@ const ShopNavigator = ({navigation}) => {
           headerLeft: () => null,
           headerRight: () => {
             return (
-              <Picker
-                selectedValue={city}
-                onValueChange={async (value, index) => {
-                  setCity(value);
-                  dispatch(addUser({...userDetails, city: value}));
-                  try {
-                    await AsyncStorage.setItem('city', value);
-                  } catch (e) {
-                    console.log(e);
-                  }
-                }}
-                mode="dropdown" // Android only
-                style={[styles.picker]}
-                itemStyle={{
-                  backgroundColor: 'grey',
-                  color: 'blue',
-                  fontFamily: 'Montserrat-Regular',
-                  fontSize: 17,
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
-                {cities.map((city, index) => {
-                  return (
-                    <Picker.Item
-                      label={
-                        city.name.charAt(0).toUpperCase() +
-                        city.name.slice(1).toLowerCase()
-                      }
-                      value={city.name}
-                      key={index}
-                    />
-                  );
-                })}
-              </Picker>
+                <FontAwesomeIcon
+                  style={{marginRight: -8}}
+                  name="map-marker-alt"
+                  color="black"
+                  size={15}
+                />
+                <Picker
+                  selectedValue={city}
+                  onValueChange={async (value, index) => {
+                    setCity(value);
+                    dispatch(addUser({...userDetails, city: value}));
+                    try {
+                      await AsyncStorage.setItem('city', value);
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  }}
+                  mode="dropdown" // Android only
+                  style={[styles.picker]}
+                  itemStyle={{
+                    backgroundColor: 'grey',
+                    color: 'blue',
+                    fontFamily: 'Montserrat-Regular',
+                    fontSize: 17,
+                  }}>
+                  {cities.map((city, index) => {
+                    return (
+                      <Picker.Item
+                        label={
+                          city.name.charAt(0).toUpperCase() +
+                          city.name.slice(1).toLowerCase()
+                        }
+                        value={city.name}
+                        key={index}
+                      />
+                    );
+                  })}
+                </Picker>
+              </View>
             );
           },
         }}
@@ -103,16 +117,16 @@ const ShopNavigator = ({navigation}) => {
         name="ShopInfoProduct"
         component={ShopInfoProductScreen}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.white,
           },
           headerTitleContainerStyle: {
             left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white,
+            color: COLORS.black,
           },
         }}
       />
@@ -120,16 +134,16 @@ const ShopNavigator = ({navigation}) => {
         name="ShopProductDescription"
         component={ShopProductDescription}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.white,
           },
           headerTitleContainerStyle: {
             left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white,
+            color: COLORS.black,
           },
         }}
       />
@@ -145,8 +159,6 @@ const styles = StyleSheet.create({
     marginRight: -60,
     width: 150,
     padding: 10,
-    borderWidth: 1,
-    borderColor: '#666',
-    textDecorationLine: 'underline',
+    // backgroundColor: '#e8ebe9',
   },
 });

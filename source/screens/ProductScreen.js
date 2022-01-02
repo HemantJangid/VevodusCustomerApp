@@ -76,7 +76,6 @@ const ProductScreen = ({navigation, route, ...props}) => {
   }
 
   function getProducts() {
-    console.log(`getting products again with city as ${city}`);
     setLoading(true);
 
     axios
@@ -234,7 +233,6 @@ const ProductScreen = ({navigation, route, ...props}) => {
                   value={searchQuery}
                   onChangeText={text => setSearchQuery(text)}
                   onSubmitEditing={() => {
-                    console.log('search: ', searchQuery);
                     getSearchProducts();
                   }}
                 />

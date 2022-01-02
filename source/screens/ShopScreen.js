@@ -43,8 +43,28 @@ const ShopScreen = ({navigation}) => {
     }
   };
 
+  function getSearchShops() {
+    setLoading(true);
+
+    axios
+      .get(`${requestUrls.baseUrl}${requestUrls.search}`, {
+        params: {
+          text: searchQuery,
+          cityName: city,
+        },
+      })
+      .then(response => {
+        setLoading(false);
+        if (response.status === 201) {
+        } else if (response.status === 200) {
+          setShopsToDisplay(response.data.shop);
+        }
+      }).catch = err => {
+      console.log(err);
+    };
+  }
+
   function getShops() {
-    console.log(`getting shops again with city as ${city}`);
     setLoading(true);
     axios
       .get(`${requestUrls.baseUrl}${requestUrls.shops}`, {
@@ -141,18 +161,17 @@ const ShopScreen = ({navigation}) => {
               value={searchQuery}
               onChangeText={text => setSearchQuery(text)}
               onSubmitEditing={() => {
-                console.log('search: ', searchQuery);
-                getSearchProducts();
+                getSearchShops();
               }}
             />
             {searchQuery.length !== 0 && (
               <TouchableOpacity
                 onPress={() => {
                   setSearchQuery('');
-                  setProductsToDisplay(products);
+                  setShopsToDisplay(shops);
                 }}
-                style={{marginRight: 10}}>
-                <Icon name="hospital" color={appTheme.COLORS.gray} size={25} />
+                style={{marginRight: 10, rotation: 45}}>
+                <Icon name="hospital" color={COLORS.gray} size={25} />
               </TouchableOpacity>
             )}
           </View>

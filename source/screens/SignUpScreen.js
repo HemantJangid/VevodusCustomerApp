@@ -27,12 +27,11 @@ const SignUpScreen = ({navigation, ...props}) => {
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState({
     address: 'Select address on map',
-    latitude: '',
-    longitude: '',
+    latitude: 22.7196,
+    longitude: 75.8577,
   });
 
   function handleImageUpload() {
-    console.log('trying to upload image');
     ImageCropPicker.openPicker({})
       .then(image => {
         setProfileImage(image);
@@ -74,7 +73,6 @@ const SignUpScreen = ({navigation, ...props}) => {
       lang: address.longitude,
       photoLength: profileImage.path ? 1 : 0,
     };
-    console.log(signupData);
 
     var data = new FormData();
     Object.keys(signupData).forEach(key => data.append(key, signupData[key]));

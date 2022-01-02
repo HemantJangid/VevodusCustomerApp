@@ -5,14 +5,15 @@ import appTheme from '../constants/theme';
 
 const SelectAddressScreen = ({navigation, route, ...props}) => {
   let googlePlacesApiKey = `AIzaSyD-e9Ulh0qheVctMSqMGOhVBF1MuFHrbsA`;
+  let {address, setAddress, setIsModalOpen} = route.params;
 
   return (
     <View style={{flex: 1}}>
       <LocationView
         apiKey={'AIzaSyD-e9Ulh0qheVctMSqMGOhVBF1MuFHrbsA'}
         initialLocation={{
-          latitude: 22.7196,
-          longitude: 75.8577,
+          latitude: address.latitude,
+          longitude: address.longitude,
         }}
         actionButtonStyle={{
           borderRadius: 10,
@@ -20,13 +21,15 @@ const SelectAddressScreen = ({navigation, route, ...props}) => {
         }}
         actionTextStyle={[{color: appTheme.COLORS.white}, appTheme.FONTS.h2]}
         onLocationSelect={({address, latitude, longitude, ...location}) => {
-          // console.log(location);
           navigation.goBack();
-          route.params.setAddress({
+          setAddress({
             address,
             latitude,
             longitude,
           });
+          if (setIsModalOpen) {
+            setIsModalOpen(true);
+          }
         }}
       />
     </View>

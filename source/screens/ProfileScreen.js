@@ -14,7 +14,6 @@ import appTheme, {COLORS} from './../constants/theme';
 const ProfileScreen = ({navigation, route, ...props}) => {
   const [rerender, setRerender] = useState(false);
   const {userDetails} = useSelector(state => state.userReducer);
-  console.log('userDetails: ', userDetails);
   useEffect(() => {
     navigation.addListener('focus', payload => {
       setRerender(!rerender);

@@ -53,7 +53,6 @@ const OtpScreen = ({navigation, route, ...props}) => {
         .post(`${requestUrls.baseUrl}${requestUrls.verityOTP}`, loginData)
         .then(response => {
           setLoading(false);
-          console.log(response);
           if (response.status === 201) {
             Alert.alert(
               'Mobile not verified try again in sometime!',

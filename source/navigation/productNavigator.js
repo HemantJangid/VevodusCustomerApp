@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import requestUrls from '../constants/requestUrls';
 import {COLORS, FONTS} from '../constants/theme';
@@ -85,7 +86,15 @@ const ProductNavigator = ({navigation}) => {
               <View
                 style={{
                   flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
+                <FontAwesomeIcon
+                  style={{marginRight: -8}}
+                  name="map-marker-alt"
+                  color="black"
+                  size={15}
+                />
                 <Picker
                   selectedValue={city}
                   onValueChange={async (value, index) => {
@@ -122,16 +131,16 @@ const ProductNavigator = ({navigation}) => {
         name="ProductDetails"
         component={ProductInfoScreen}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.white,
           },
           headerTitleContainerStyle: {
             left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white,
+            color: COLORS.black,
           },
         }}
       />
@@ -145,10 +154,7 @@ const styles = StyleSheet.create({
   picker: {
     marginRight: -60,
     width: 150,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#666',
-    textDecorationLine: 'underline',
-    backgroundColor: '#e8ebe9',
+    // padding: 10,
+    // backgroundColor: '#e8ebe9',
   },
 });

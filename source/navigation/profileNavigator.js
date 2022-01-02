@@ -28,6 +28,7 @@ const ProfileNavigator = ({navigation}) => {
             fontFamily: 'Montserrat-Medium',
             color: COLORS.black,
           },
+          headerLeft: () => null,
           headerRight: () => {
             return (
               <TouchableOpacity
@@ -55,16 +56,16 @@ const ProfileNavigator = ({navigation}) => {
         name="ActiveOrders"
         component={ActiveOrderScreen}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.white,
           },
           headerTitleContainerStyle: {
             left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white,
+            color: COLORS.black,
           },
         }}
       />
@@ -72,16 +73,16 @@ const ProfileNavigator = ({navigation}) => {
         name="PastOrders"
         component={PastOrderScreen}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.white,
           },
           headerTitleContainerStyle: {
             left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white,
+            color: COLORS.black,
           },
         }}
       />
@@ -89,16 +90,16 @@ const ProfileNavigator = ({navigation}) => {
         name="OrderInfo"
         component={OrderInfo}
         options={{
-          headerTintColor: COLORS.white,
+          headerTintColor: COLORS.black,
           headerStyle: {
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.white,
           },
           headerTitleContainerStyle: {
             left: 50,
           },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Medium',
-            color: COLORS.white,
+            color: COLORS.black,
           },
         }}
       />

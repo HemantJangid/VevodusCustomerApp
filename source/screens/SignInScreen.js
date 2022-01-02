@@ -46,7 +46,6 @@ const SignInScreen = ({navigation}) => {
             {text: 'OK', onPress: () => console.log('OK Pressed')},
           ]);
         } else if (response.status === 200) {
-          console.log(response);
           setLoading(false);
           // let user = response.data[0];
           // let userDetails = {...user};

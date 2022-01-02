@@ -24,7 +24,6 @@ const GiftScreen = () => {
       .post(`${requestUrls.baseUrl}${requestUrls.gift}`, values)
       .then(response => {
         setLoading(false);
-        console.log(response);
         if (response.status === 201) {
           Alert.alert('Gift Request Failed', response.data, [
             {text: 'OK', onPress: () => console.log('OK Pressed')},
